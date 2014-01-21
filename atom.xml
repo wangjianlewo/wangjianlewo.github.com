@@ -4,7 +4,7 @@
   <title><![CDATA[好好's Blog]]></title>
   <link href="http://wangjianlewo.github.io/atom.xml" rel="self"/>
   <link href="http://wangjianlewo.github.io/"/>
-  <updated>2014-01-21T09:59:15+08:00</updated>
+  <updated>2014-01-21T13:07:25+08:00</updated>
   <id>http://wangjianlewo.github.io/</id>
   <author>
     <name><![CDATA[wangjianlewo]]></name>
@@ -12,6 +12,96 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[iOS集成支付宝快捷支付]]></title>
+    <link href="http://wangjianlewo.github.io/blog/2014/01/21/iosji-cheng-zhi-fu-bao-kuai-jie-zhi-fu/"/>
+    <updated>2014-01-21T11:18:23+08:00</updated>
+    <id>http://wangjianlewo.github.io/blog/2014/01/21/iosji-cheng-zhi-fu-bao-kuai-jie-zhi-fu</id>
+    <content type="html"><![CDATA[<p>越来越多的应用中,使用支付宝快捷支付了,支付宝也提供了快捷支付的sdk.
+而且只要集成了支付宝的sdk后,sdk会自动判断设备是否安装了支付宝客户端:若安装,则直接调用支付宝客户端;若没有安装,会提示下载,点击取消下载则直接跳到网页支付,sdk考虑的很周到了,不用大家费心啦.</p>
+
+<h3>1,支付宝快捷支付链接地址(其实很难找):</h3>
+
+<p><a href="https://b.alipay.com/order/productDetail.htm?productId=2013080604609654&amp;tabId=4#ps-tabinfo-hash">https://b.alipay.com/order/productDetail.htm?productId=2013080604609654&amp;tabId=4#ps-tabinfo-hash</a></p>
+
+<h3>2, 下载后运行:</h3>
+
+<p>下载集成开发包 之后,一路: 客户端demo&mdash;iOS_SDK&mdash;AlipaySdkDemo ,打开运行, 一个错误 :Linker command failed with exit code 1 (use -v to see invocation)</p>
+
+<p> <img src="http://wangjianlewo.github.io/images/2014-01-21/2014-01-21-buildError.png" alt="me"></p>
+
+<p>是不是很悲伤?不要悲伤,只要将项目中Frameworks文件夹下的.a 文件链接删除后,重新添加即可.</p>
+
+<h3>3,关于PartnerConfig.h :</h3>
+
+<p>关键的支付宝账户信息在 PartnerConfig.h 中,首先可以将此文件中的数据,替换成自己的,先测试自己活得id和keys是否正确.</p>
+
+<p>获取方式如下:  <br/>
+a,合作者身份ID（partner）和交易安全校验码（key）链接地址:<a href="http://help.alipay.com/support/help_detail.htm?help_id=243726">http://help.alipay.com/support/help_detail.htm?help_id=243726</a>  <br/>
+b,客户的私钥链接地址:  <a href="http://help.alipay.com/support/help_detail.htm?help_id=253654&amp;sh=Y&amp;tab=null&amp;info_type=9">http://help.alipay.com/support/help_detail.htm?help_id=253654&amp;sh=Y&amp;tab=null&amp;info_type=9</a>  <br/>
+c,支付宝公钥都是相同的,直接使用demo中的公钥即可</p>
+
+<p>注意事项:  <br/>
+1,如果客户私钥错误,运行程序后,会报这个错: 请求参数错误,请稍后重试.   <br/>
+2,如果客户私钥与网站上上传的不匹配,会报这个错: 支付宝rsa_private read error : private key is NULL</p>
+
+<p>使用demo,测试通过后,就可以将支付宝添加到自己的项目中去了.</p>
+
+<h3>4,具体添加流程 :</h3>
+
+<p>结合查看&mdash;-集成包中的移动快捷支付应用集成接入包支付接口接入与使用规则.pdf</p>
+
+<h4>a,  添加必要的头文件、bundle、库文件</h4>
+
+<h4>b,  添加自定义URL Scheme</h4>
+
+<h4>c,  goToPay</h4>
+
+<pre><code>-(void)goToPay
+{   
+    NSString *appScheme = @"TestAliPay";
+    NSString* orderInfo = [self getOrderInfo];
+    NSString* signedStr = [self doRsa:orderInfo];
+    NSLog(@"%@",signedStr);
+
+    NSString *orderString = [NSString stringWithFormat:@"%@&amp;sign=\"%@\"&amp;sign_type=\"%@\"",orderInfo, signedStr, @"RSA"];
+    [AlixLibService payOrder:orderString AndScheme:appScheme seletor:_result target:self];
+    NSLog(@"payOrder %@ \nscheme %@ \nselector ",orderString,appScheme);         
+}
+</code></pre>
+
+<p>注意事项:  <br/>
+记得给<em>result 赋值: SEL  </em>result = @selector(paymentResult:);   否则应用内支付成功后,不会调paymentResult 这个函数的.</p>
+
+<h4>d,  getOrderInfo (关于那些订单信息)</h4>
+
+<pre><code>    -(NSString*)getOrderInfo
+    {
+        AlixPayOrder *order = [[AlixPayOrder alloc] init];
+        order.partner = PartnerID;
+        order.seller = SellerID;
+        order.tradeNO = [self generateTradeNO]; //order id
+        order.productName = @"AlipayTest"; 
+        order.productDescription = @"AlipayTest";
+        order.amount = [NSString stringWithFormat:@"0.01"];
+        order.notifyURL =  @"http://www.xxx.com";
+        return [order description];
+    }
+</code></pre>
+
+<p>注意事项: <br/>
+1,generateTradeNO 这个函数,仅仅是支付宝为了给广大开发者进行测试,写的一个随机生成订单号的函数! 自己支付的时候,需要将自己的后台返回的唯一订单号赋值给tradeNO. (真的有人照抄支付宝的这个函数的,然后订单号不对,还很疑问&hellip;)  <br/>
+2,支付宝服务器通知:  notifyURL记得写哦,不然,后台收不到支付成功的通知</p>
+
+<h4>e,  支付成功后</h4>
+
+<p>应用外快捷支付(即网页支付)返回结果:通过 AppDelegate 的方法 handleOpenURL 获取 (详情可参考 demo 中 AppDelegate.m)的 handleOpenURL 方法,支付结果的详细信息详见接口文档中的同步返回参数说明。  <br/>
+注意事项:应用内和应用外的两个成功支付的接口需同时实现!</p>
+
+<h3>iOS添加支付宝快捷支付,正式完成!</h3>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[ZXingObjC 崩溃问题解决方法]]></title>
