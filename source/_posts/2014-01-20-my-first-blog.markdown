@@ -5,6 +5,7 @@ date: 2014-01-20 14:58:08 +0800
 comments: true
 categories: 
 ---
+<!--more -->
 ###一,  二维码扫描,有众所周知的zxing,和zbar.
 1,zbar for iphone 已经一年没有更新了,都还没有支持ARC.
 
