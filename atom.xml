@@ -4,7 +4,7 @@
   <title><![CDATA[好好's Blog]]></title>
   <link href="http://wangjianlewo.github.io/atom.xml" rel="self"/>
   <link href="http://wangjianlewo.github.io/"/>
-  <updated>2014-01-21T13:07:25+08:00</updated>
+  <updated>2014-01-27T17:06:47+08:00</updated>
   <id>http://wangjianlewo.github.io/</id>
   <author>
     <name><![CDATA[wangjianlewo]]></name>
@@ -18,7 +18,10 @@
     <link href="http://wangjianlewo.github.io/blog/2014/01/21/iosji-cheng-zhi-fu-bao-kuai-jie-zhi-fu/"/>
     <updated>2014-01-21T11:18:23+08:00</updated>
     <id>http://wangjianlewo.github.io/blog/2014/01/21/iosji-cheng-zhi-fu-bao-kuai-jie-zhi-fu</id>
-    <content type="html"><![CDATA[<p>越来越多的应用中,使用支付宝快捷支付了,支付宝也提供了快捷支付的sdk.
+    <content type="html"><![CDATA[<!--more -->
+
+
+<p>越来越多的应用中,使用支付宝快捷支付了,支付宝也提供了快捷支付的sdk.
 而且只要集成了支付宝的sdk后,sdk会自动判断设备是否安装了支付宝客户端:若安装,则直接调用支付宝客户端;若没有安装,会提示下载,点击取消下载则直接跳到网页支付,sdk考虑的很周到了,不用大家费心啦.</p>
 
 <h3>1,支付宝快捷支付链接地址(其实很难找):</h3>
@@ -108,7 +111,10 @@ c,支付宝公钥都是相同的,直接使用demo中的公钥即可</p>
     <link href="http://wangjianlewo.github.io/blog/2014/01/20/my-first-blog/"/>
     <updated>2014-01-20T14:58:08+08:00</updated>
     <id>http://wangjianlewo.github.io/blog/2014/01/20/my-first-blog</id>
-    <content type="html"><![CDATA[<h3>一,  二维码扫描,有众所周知的zxing,和zbar.</h3>
+    <content type="html"><![CDATA[<!--more -->
+
+
+<h3>一,  二维码扫描,有众所周知的zxing,和zbar.</h3>
 
 <p>1,zbar for iphone 已经一年没有更新了,都还没有支持ARC.</p>
 
