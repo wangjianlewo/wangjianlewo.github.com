@@ -9,7 +9,7 @@
   <meta name="author" content="wangjianlewo">
 
   
-  <meta name="description" content="">
+  <meta name="description" content="开篇说明: 在iOS7中，status bar的外观默认依赖UIViewController, 也就是说status bar随UIViewController的不同而不同.即在info.plist中的key:UIViewControllerBasedStatusBarAppearance &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,129 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/03/06/ios7zhong-zhuang-tai-lan-statusbarde-ding-zhi/">iOS7中状态栏-StatusBar的定制</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-06T17:14:01+08:00" pubdate data-updated="true">Mar 6<span>th</span>, 2014</time>
+        
+	    
+	             | <a href="/blog/2014/03/06/ios7zhong-zhuang-tai-lan-statusbarde-ding-zhi/#comments">Comments</a>
+	            
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h4>开篇说明:</h4>
+
+<h4>在iOS7中，status bar的外观默认依赖UIViewController, 也就是说status bar随UIViewController的不同而不同.即在info.plist中的key:UIViewControllerBasedStatusBarAppearance 的默认值为YES.</h4>
+
+<h3>一, 若想全局设置StatusBar的外观需:</h3>
+
+<p>1,在项目的Info.plist文件里设置UIViewControllerBasedStatusBarAppearance为NO。即更改为StatusBar的状态不随UIViewController的不同而不同</p>
+
+<p>2,使用该方法设置外观</p>
+
+<pre><code>[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+</code></pre>
+
+<p>或 隐藏StatusBar</p>
+
+<pre><code>[[UIApplication sharedApplication]setStatusBarHidden:YES];
+</code></pre>
+
+<h3>二,对各个UIViewController单独进行设置需:</h3>
+
+<p>1.在项目的Info.plist文件里设置UIViewControllerBasedStatusBarAppearance为YES。(默认即为YES)</p>
+
+<p>2.使用该方法设置外观。</p>
+
+<pre><code>-(UIStatusBarStyle)preferredStatusBarStyle
+ { return UIStatusBarStyleLightContent;}
+</code></pre>
+
+<p>UIStatusBarStyleLightContent 为白色文字，深色背景时使用</p>
+
+<p>或 隐藏StatusBar</p>
+
+<pre><code>-(BOOL)prefersStatusBarHidden { return NO;}
+</code></pre>
+
+<p>返回NO表示要显示，返回YES将隐藏</p>
+
+<h3>三,需要注意的是:</h3>
+
+<p>单独设置的viewController必须为最高级别的viewController,(every top-level view controller in your app (other than a standard UIKit container view controller) ）中调用,如果一个控制器在UINavigationController内，则上述的控制StatusBar的方法没有被调用。</p>
+
+<p>解决方案1: 设置navigationBar 的 barStyle</p>
+
+<pre><code>nav.navigationBar.barStyle = UIBarStyleBlack; 
+</code></pre>
+
+<p>此时StatusBar将会变为白色文字,而默认的UIBarStyleDefault则对应显示UIStatusBarStyleDefault的状态.</p>
+
+<p>解决方案2:
+写一个UINavigationController的category,将顶层的控制器返回</p>
+
+<pre><code>@interface UINavigationController (StatusBarStyle)
+@end
+
+@implementation UINavigationController (StatusBarStyle)
+-(UIViewController *)childViewControllerForStatusBarStyle {
+    return self.topViewController;
+}
+@end
+</code></pre>
+
+<p>解决方案3:
+写一个UINavigationController的category，将上述设置StatusBar的代码写到分类中(使用UINavgationViewController的ViewController中无需再写)</p>
+
+<pre><code>@interface UINavigationController (StatusBar)
+@end
+
+@implementation UINavigationController (StatusBar)
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+    return UIStatusBarStyleLightContent;
+}
+</code></pre>
+
+<p>还可返回导航控制器的最后一个控制器的StatusBar状态:</p>
+
+<p>return [[self.viewControllers lastObject] preferredStatusBarStyle];</p>
+
+<pre><code>- (BOOL)prefersStatusBarHidden {
+  return NO;
+}
+@end
+</code></pre>
+
+<h2>总结帖,欢迎拍砖!</h2>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -161,6 +284,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/03/06/ios7zhong-zhuang-tai-lan-statusbarde-ding-zhi/">iOS7中状态栏-StatusBar的定制</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/01/21/iosji-cheng-zhi-fu-bao-kuai-jie-zhi-fu/">iOS集成支付宝快捷支付</a>
