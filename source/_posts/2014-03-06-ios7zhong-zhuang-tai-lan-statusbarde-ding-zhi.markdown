@@ -5,6 +5,8 @@ date: 2014-03-06 17:14:01 +0800
 comments: true
 categories: 
 ---
+<!--more -->
+
 ####开篇说明:
 ####在iOS7中，status bar的外观默认依赖UIViewController, 也就是说status bar随UIViewController的不同而不同.即在info.plist中的key:UIViewControllerBasedStatusBarAppearance 的默认值为YES.
 
