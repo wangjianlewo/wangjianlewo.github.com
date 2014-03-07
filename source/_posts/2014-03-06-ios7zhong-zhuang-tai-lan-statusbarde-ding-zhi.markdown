@@ -40,13 +40,9 @@ UIStatusBarStyleLightContent 为白色文字，深色背景时使用
 ###三,需要注意的是:
 单独设置的viewController必须为最高级别的viewController,(every top-level view controller in your app (other than a standard UIKit container view controller) ）中调用,如果一个控制器在UINavigationController内，则上述的控制StatusBar的方法没有被调用。
 
-解决方案1: 设置navigationBar 的 barStyle
 
- 	nav.navigationBar.barStyle = UIBarStyleBlack; 
-此时StatusBar将会变为白色文字,而默认的UIBarStyleDefault则对应显示UIStatusBarStyleDefault的状态. 
-
-解决方案2:
-写一个UINavigationController的category,将顶层的控制器返回
+解决方案1:
+写一个UINavigationController的category,将顶层的控制器返回,则上述方法被调用,成功修改StatusBar的状态.
 
 	@interface UINavigationController (StatusBarStyle)
 	@end
@@ -57,7 +53,14 @@ UIStatusBarStyleLightContent 为白色文字，深色背景时使用
 	}
 	@end
 
-解决方案3:
+解决方案2: 直接设置navigationBar 的 barStyle
+
+ 	nav.navigationBar.barStyle = UIBarStyleBlack; 
+此时StatusBar将会变为白色文字,而默认的UIBarStyleDefault则对应显示UIStatusBarStyleDefault的状态. 
+
+此解决方案比较讨巧,仅仅是系统会根据NavBar的状态来显示其对应StatusBar的状态.  使用此方法,无需在重写preferredStatusBarStyle 方法.
+
+解决方案3: 
 写一个UINavigationController的category，将上述设置StatusBar的代码写到分类中(使用UINavgationViewController的ViewController中无需再写)
 
 	@interface UINavigationController (StatusBar)
